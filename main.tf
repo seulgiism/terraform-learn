@@ -142,13 +142,7 @@ resource "aws_security_group" "myapp-security-group" {
     associate_public_ip_address = true
     key_name = aws_key_pair.ssh-key.key_name
 
-    user_data = <<E0F
-                    #!/bin/bash
-                    sudo yum update -y && sudo yum install -y docker
-                    sudo systemctl start docker
-                    sudo usermod -aG docker ec2-user
-                    docker run -p 8080:80 nginx
-                  E0F
+    user_data = file("entry-script.sh")
 
     tags = {
       name = "${var.env_prefix}-server"
